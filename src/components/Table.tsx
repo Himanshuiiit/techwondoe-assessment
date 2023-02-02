@@ -11,9 +11,10 @@ type Props = {
   users: User[];
   loading: boolean;
   setUsers: (users: User[]) => void;
+  pageNo: number;
 };
 
-const Table: FC<Props> = ({users, loading, setUsers}: Props) => {
+const Table: FC<Props> = ({users, loading, setUsers, pageNo}: Props) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isOpenDel, setIsOpenDel] = useState<boolean>(false);
   const [currName, setCurrName] = useState<string>('');
@@ -78,39 +79,41 @@ const Table: FC<Props> = ({users, loading, setUsers}: Props) => {
     setIsOpen(true);
   }
 
-  const usersForTable: UserTableData[] = users.map(user => {
-    return {
-      info: {
-        name: user.name,
-        email: user.email,
-        avatar: user.avatar,
-      },
-      status: user.status ? 'Active' : 'Invited',
-      lastLogin: user.lastLogin,
-      role: user.role,
-      methods: {
-        id: user.id,
-        delete: id => {
-          openModalDel();
-          setToDeleteID(id);
+  const usersForTable: UserTableData[] = users
+    .slice(10 * (pageNo - 1), 10 * pageNo)
+    .map(user => {
+      return {
+        info: {
+          name: user.name,
+          email: user.email,
+          avatar: user.avatar,
         },
-        edit: id => {
-          openModal();
-          const currUser = users.find(user => user.id === id);
-          if (currUser) {
-            setCurrName(currUser.name);
-            setCurrEmail(currUser.email);
-            setCurrRole(currUser.role);
-            setCurrStatus(currUser.status);
-            setCurrAvatar(currUser.avatar || '');
-            setCurrId(currUser.id);
-          }
+        status: user.status ? 'Active' : 'Invited',
+        lastLogin: user.lastLogin,
+        role: user.role,
+        methods: {
+          id: user.id,
+          delete: id => {
+            openModalDel();
+            setToDeleteID(id);
+          },
+          edit: id => {
+            openModal();
+            const currUser = users.find(user => user.id === id);
+            if (currUser) {
+              setCurrName(currUser.name);
+              setCurrEmail(currUser.email);
+              setCurrRole(currUser.role);
+              setCurrStatus(currUser.status);
+              setCurrAvatar(currUser.avatar || '');
+              setCurrId(currUser.id);
+            }
+          },
         },
-      },
-    };
-  });
+      };
+    });
 
-  const data = React.useMemo(() => usersForTable, [users]);
+  const data = React.useMemo(() => usersForTable, [pageNo, users]);
 
   const COLUMNS: Column<UserTableData>[] = [
     {

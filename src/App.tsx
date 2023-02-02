@@ -23,7 +23,8 @@ const App: FC = () => {
       <div className="m-4 rounded-lg border">
         <Header users={userData} setUsers={setUserData} />
         <Table
-          users={userData.slice(10 * (pageNo - 1), 10 * pageNo)}
+          users={userData}
+          pageNo={pageNo}
           setUsers={setUserData}
           loading={isLoading}
         />
