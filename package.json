@@ -23,12 +23,12 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "compile": "tsc",
-    "prepare": "yarn.cmd run compile",
-    "pretest": "yarn.cmd run compile",
+    "prepare": "yarn run compile",
+    "pretest": "yarn run compile",
     "lint": "gts lint",
     "clean": "gts clean",
     "fix": "gts fix",
-    "posttest": "yarn.cmd run lint"
+    "posttest": "yarn run lint"
   },
   "browserslist": {
     "production": [
